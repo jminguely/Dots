@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+</head>
+<body>
+<h1 id="dotssystemforthebiopôleproject">Dots system for the Biopôle Project</h1>
+
+<h2 id="installation">Installation</h2>
+
+<p>Clone/download the project and then include the following scripts/snippets in your project:
+<code>sh
+&lt;link rel=&quot;stylesheet&quot; href=&quot;dist/dots-grid.css&quot;&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;dist/webfont.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;dist/pixi.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;dist/zepto.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;dist/dots-grid.js&quot;&gt;&lt;/script&gt;
+</code></p>
+
+<p>And then include the following code in your site:
+<code>sh
+&lt;div class=&quot;canvasContainer&quot;&gt;
+    &lt;canvas id=&quot;grid&quot;&gt;&lt;/canvas&gt; 
+    &lt;div class=&quot;overlay&quot;&gt;
+        &lt;div class=&quot;content&quot;&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></p>
+
+<h2 id="json">JSON</h2>
+
+<p>To add some interactive points to the grid, you need to include a script containing a variable &#8220;gridElements&#8221; and containing an Array with the specified dots</p>
+
+<p>Here are the parameters for each element-dots:</p>
+
+<h4 id="dotxdoty">dotX / dotY</h4>
+
+<p>Position in percentage.
+Top left is 0 / 0.
+Bottom Right is 100 / 100</p>
+
+<h4 id="overlayxoverlayy">overlayX / overlayY</h4>
+
+<p>Distance in dots of the position of the tooltip from the initial interactive dot. </p>
+
+<h4 id="wh">w / h</h4>
+
+<p>Width &amp; Height of the tooltip to be open
+In pixels</p>
+
+<h4 id="anchorxanchory">anchorX / anchorY</h4>
+
+<p>Anchor of the tooltip. Point where the tooltip is place in relation from the initail dot
+In pixels</p>
+
+<h4 id="animation">animation</h4>
+
+<p>Type of animation to be displayed on the grid when the tooltip opens
+<code>sh
+0: Diagonale
+1: Croix désaxée
+2: Croix 
+3: &quot;L&quot;
+4: Flèche
+5: Carré
+</code></p>
+
+<h4 id="type">type</h4>
+
+<p>Type of the content to be displayed on click
+<code>sh
+keywords: floating keywords
+html: embed html
+</code></p>
+
+<h4 id="src">src</h4>
+
+<p>Html code to be placed in the tooltip (for an HTML type of element)</p>
+
+<h4 id="content">content</h4>
+
+<p>List of keywords to be displayed. (for a keywords type of element)</p>
+
+<h2 id="note">Note</h2>
+
+<p>See http://php.net/manual/en/function.json-encode.php for more infos about printing js compatible array from php</p>
+
+<h2 id="credit">Credit</h2>
+
+<p>Julien Minguely - jminguely@gmail.com</p>
+
+</body>
+</html>
