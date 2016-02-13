@@ -66,7 +66,9 @@ Html code to be placed in the tooltip (for an HTML type of element)
 #### content
 List of keywords to be displayed. (for a keywords type of element)
 
-## Note
+## Notes
+
+If there is no elements, the grid will be displayed anyway. Userful if you want to use the interactive grid without element, as a background.
 
 See http://php.net/manual/en/function.json-encode.php for more infos about printing js compatible array from php
 
