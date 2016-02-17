@@ -45,12 +45,18 @@ In pixels
 #### animation
 Type of animation to be displayed on the grid when the tooltip opens
 ```sh
-0: Diagonale
-1: Croix désaxée
-2: Croix 
-3: "L"
-4: Flèche
-5: Carré
+0: Oblique
+1: Inversed Oblique
+2: Cross
+3: Asymetric Cross (Top-Left) 
+4: Asymetric Cross (Top-Right) 
+5: Asymetric Cross (Bottom-Right) 
+6: Asymetric Cross (Bottom-Left) 
+7: "L"
+8: Inversed "L"
+9: Arrow
+10: Inversed Arrow
+11: Carré
 ```
 
 #### type

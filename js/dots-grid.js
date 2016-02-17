@@ -41,6 +41,22 @@ var animations = [
 [[3, 3]]
 ],
 [
+[[3, -3]],
+[[2, -2]],
+[[1, -1]],
+[[0, 0]],
+[[-1, 1]],
+[[-2, 2]],
+[[-3, 3]]
+],
+[
+[[0, -2], [0, 2], [2, 0], [-2, 0]],
+[[0, -3], [0, 3], [3, 0], [-3, 0]],
+[[0, -4], [0, 4], [4, 0], [-4, 0]],
+[[0, -5], [0, 5], [5, 0], [-5, 0]],
+[[0, -6], [0, 6], [6, 0], [-6, 0]]
+],
+[
 [[0, -2], [0, 2], [2, 0], [-2, 0]],
 [[0, -3], [-3, 0]],
 [[0, -4], [-4, 0]],
@@ -49,10 +65,21 @@ var animations = [
 ],
 [
 [[0, -2], [0, 2], [2, 0], [-2, 0]],
-[[0, -3], [0, 3], [3, 0], [-3, 0]],
-[[0, -4], [0, 4], [4, 0], [-4, 0]],
-[[0, -5], [0, 5], [5, 0], [-5, 0]],
-[[0, -6], [0, 6], [6, 0], [-6, 0]]
+[[0, -3], [3, 0]],
+[[0, -4], [4, 0]]
+
+],
+[
+[[0, -2], [0, 2], [2, 0], [-2, 0]],
+[[0, 3], [3, 0]],
+[[0, 4], [4, 0]]
+
+],
+[
+[[0, -2], [0, 2], [2, 0], [-2, 0]],
+[[0, 3], [-3, 0]],
+[[0, 4], [-4, 0]]
+
 ],
 [
 [[-4, -4]],
@@ -70,13 +97,35 @@ var animations = [
 [[2, -2]],
 [[1, -1]],
 [[0, 0]],
+[[-1, 0]],
+[[-2, 0]],
+[[-3, 0]]
+],
+[
+[[4, -4]],
+[[3, -3]],
+[[2, -2]],
+[[1, -1]],
+[[0, 0]],
 [[-1, 1]],
 [[-2, 2]],
 [[-2, 1], [-1, 2]],
 [[-2, 0], [0, 2]],
 [[-2, -1], [1, 2]],
-
-],[
+],
+[
+[[-4, -4]],
+[[-3, -3]],
+[[-2, -2]],
+[[-1, -1]],
+[[0, 0]],
+[[1, 1]],
+[[2, 2]],
+[[2, 1], [1, 2]],
+[[2, 0], [0, 2]],
+[[2, -1], [-1, 2]],
+],
+[
 [[-5, 2], [2, -5]],
 [[-5, 1], [-4, 2], [1, -5], [2, -4]],
 [[-5, 0], [-3, 2], [0, -5], [2, -3]],
@@ -108,13 +157,13 @@ var animations = [
 
 $(document).ready(function(){
 	WebFont.load({
-	  custom: {
-	    families: ["CustomMuseoSansBold"]
-	  },
-	  active: function() {
-	    init();
-	  }
-});
+		custom: {
+			families: ["CustomMuseoSansBold"]
+		},
+		active: function() {
+			init();
+		}
+	});
 });
 
 
@@ -149,205 +198,225 @@ function init(){
 
 	document.onmousemove = mouseEventHandler;
 
-		doneResizing();
-		render();
-	}
+	doneResizing();
+	render();
+}
 
-	window.onresize = resizeStart;
-	function resizeStart(){
-		clearTimeout(resizeId);
-		flushStage();
-		graphics.clear();
-		graphics2.clear();
-		animationGraphics.clear();
-		$("div.overlay").removeClass("visible").find(".content").html("");
-		resizeId = setTimeout(doneResizing, 500);
+window.onresize = resizeStart;
+function resizeStart(){
+	clearTimeout(resizeId);
+	flushStage();
+	graphics.clear();
+	graphics2.clear();
+	animationGraphics.clear();
+	$("div.overlay").removeClass("visible").find(".content").html("");
+	resizeId = setTimeout(doneResizing, 500);
+}
+function flushStage(){
+	if(typeof gridElements != 'undefined'){
+		gridElements.forEach(function(element) {
+			if(element.graphics){
+				element.graphics.clear();
+			}
+		});
 	}
-	function flushStage(){
-		if(typeof gridElements != 'undefined'){
-			gridElements.forEach(function(element) {
-				if(element.graphics){
-					element.graphics.clear();
-				}
-			});
-		}
-	}
-	function setDimension(){
-		widthWindow = $("#grid").width();
-		heightWindow = $("#grid").height();
-		aspectRatio = window.devicePixelRatio;
-	}
-	function doneResizing()
-	{
-		setDimension();
-		renderer.resize(widthWindow, heightWindow);
-		cols = Math.ceil(widthWindow/(marginDot+radiusDot*2));
-		rows = Math.ceil(heightWindow/(marginDot+radiusDot*2));
-		drawGrid();
-	}
+}
+function setDimension(){
+	widthWindow = $("#grid").width();
+	heightWindow = $("#grid").height();
+	aspectRatio = window.devicePixelRatio;
+}
+function doneResizing()
+{
+	setDimension();
+	renderer.resize(widthWindow, heightWindow);
+	cols = Math.ceil(widthWindow/(marginDot+radiusDot*2));
+	rows = Math.ceil(heightWindow/(marginDot+radiusDot*2));
+	drawGrid();
+}
 
-	function drawGrid(){
-		for (var i = 0; i < cols; i++) {
-			for (var j = 0; j < rows; j++) {
-				var x = i*(marginDot+radiusDot*2);
-				var y = j*(marginDot+radiusDot*2);
+function drawGrid(){
+	for (var i = 0; i < cols; i++) {
+		for (var j = 0; j < rows; j++) {
+			var x = i*(marginDot+radiusDot*2);
+			var y = j*(marginDot+radiusDot*2);
 
-				graphics.beginFill("0x"+mainColor);
-				graphics.drawCircle(x, y, radiusDot);
-				graphics.endFill();
-			};
+			graphics.beginFill("0x"+mainColor);
+			graphics.drawCircle(x, y, radiusDot);
+			graphics.endFill();
 		};
-		if(typeof gridElements != 'undefined'){
-			gridElements.forEach(function(element, index) {
+	};
+	if(typeof gridElements != 'undefined'){
+		gridElements.forEach(function(element, index) {
 
-				var x = Math.round(cols/100*element.dotX);
-				var y = Math.round(rows/100*element.dotY);
-
-
-				gridElements[index].graphics = new PIXI.Graphics();
-				stage.addChild(gridElements[index].graphics);
-				gridElements[index].graphics.beginFill("0x"+secondColor);
+			var x = Math.round(cols/100*element.dotX);
+			var y = Math.round(rows/100*element.dotY);
 
 
-				for (var i = 1; i >= -1; i--) {
-					for (var j = 1; j >= -1; j--) {
-						if(Math.abs(i)!=Math.abs(j) || (i === 0 && j === 0)){
-							var xPos = (x+i)*(marginDot+radiusDot*2);
-							var yPos = (y+j)*(marginDot+radiusDot*2);
-							gridElements[index].graphics.drawCircle(xPos, yPos, radiusDot);
+			gridElements[index].graphics = new PIXI.Graphics();
+			stage.addChild(gridElements[index].graphics);
+			gridElements[index].graphics.beginFill("0x"+secondColor);
 
-						}
+
+			for (var i = 1; i >= -1; i--) {
+				for (var j = 1; j >= -1; j--) {
+					if(Math.abs(i)!=Math.abs(j) || (i === 0 && j === 0)){
+						var xPos = (x+i)*(marginDot+radiusDot*2);
+						var yPos = (y+j)*(marginDot+radiusDot*2);
+						gridElements[index].graphics.drawCircle(xPos, yPos, radiusDot);
+
+					}
+				}
+
+			}
+			gridElements[index].graphics.endFill();
+			gridElements[index].graphics.interactive = true;
+			gridElements[index].graphics.buttonMode = true;
+			gridElements[index].graphics.defaultCursor = "pointer";
+			var hitBoxRadius = (radiusDot*2+marginDot)*2;
+			gridElements[index].graphics.hitArea = new PIXI.Rectangle(x*(marginDot+radiusDot*2)-hitBoxRadius, y*(marginDot+radiusDot*2)-hitBoxRadius, hitBoxRadius*2, hitBoxRadius*2);
+
+
+
+			gridElements[index].graphics.click = gridElements[index].graphics.tap = function(data){	
+				if(currentElementId === index){
+					if(element.type = "html"){
+						closeOverlay();
+					}
+					if(element.type = "keywords"){
+						hideKeywords();
+					}
+					animationGraphics.clear();
+					currentElementId = undefined;
+				} else{
+					hideKeywords();
+					currentElementId = index;
+					xBox = (x + element.overlayX)*(marginDot+radiusDot*2)-element.anchorX;
+					yBox = (y + element.overlayY)*(marginDot+radiusDot*2)-element.anchorY;
+					playAnimation(x, y, element.animation);
+					if(element.type = "html"){
+						changeOverlayContent(element.src, xBox, yBox, element.w, element.h);
+					}
+					if(element.type = "keywords"){
+						displayKeywords(element.content, xBox, yBox, element.w, element.h);
 					}
 
 				}
-				gridElements[index].graphics.endFill();
-				gridElements[index].graphics.interactive = true;
-				gridElements[index].graphics.buttonMode = true;
-				gridElements[index].graphics.defaultCursor = "pointer";
-				var hitBoxRadius = (radiusDot*2+marginDot)*2;
-				gridElements[index].graphics.hitArea = new PIXI.Rectangle(x*(marginDot+radiusDot*2)-hitBoxRadius, y*(marginDot+radiusDot*2)-hitBoxRadius, hitBoxRadius*2, hitBoxRadius*2);
+
+
+			};
+
+		});
+	}
+
+}
 
 
 
-				gridElements[index].graphics.click = gridElements[index].graphics.tap = function(data){	
-					if(currentElementId === index){
-						if(element.type = "html"){
-							closeOverlay();
-						}
-						if(element.type = "keywords"){
-							hideKeywords();
-						}
-						animationGraphics.clear();
-						currentElementId = undefined;
-					} else{
-						hideKeywords();
-						currentElementId = index;
-						xBox = (x + element.overlayX)*(marginDot+radiusDot*2)-element.anchorX;
-						yBox = (y + element.overlayY)*(marginDot+radiusDot*2)-element.anchorY;
-						playAnimation(x, y, element.animation);
-						if(element.type = "html"){
-							changeOverlayContent(element.src, xBox, yBox, element.w, element.h);
-						}
-						if(element.type = "keywords"){
-							displayKeywords(element.content, xBox, yBox, element.w, element.h);
-						}
+function playAnimation(x, y, animationId){
+	animationGraphics.clear();
+	var animation = animations[animationId];
 
-					}
-
-					
-				};
-
-			});
+	for (var stepId in animation) {
+		var step = animation[stepId];
+		var newStep = [];
+		for (var dotId in step) {
+			newStep.push([x+step[dotId][0], y+step[dotId][1]]);
 		}
+		animationQueue.push(newStep);
+
 
 	}
+}
 
 
 
-	function playAnimation(x, y, animationId){
-		animationGraphics.clear();
-		var animation = animations[animationId];
 
-		for (var stepId in animation) {
-			var step = animation[stepId];
-			var newStep = [];
-			for (var dotId in step) {
-				newStep.push([x+step[dotId][0], y+step[dotId][1]]);
-			}
-			animationQueue.push(newStep);
+function hideKeywords(){
+	for(var keywordId in keywords){
+		keywords[keywordId].textObject.destroy();
+	}
+	keywords = [];
+}
+function displayKeywords(content, x, y){
+	var widthFirstElement = 0;
+	var heightFirstElement = 0;
+	var widthSecondElement = 0;
+	var heightSecondElement = 0;
+	for(var textId in content){
+		var text = content[textId];
+		var textObject = new PIXI.Text(text.toUpperCase(), {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
+		textObject.pivot = new PIXI.Point(textObject.width/2, textObject.height/2);
+		textObject.resolution = 2;
+		var xT, yT;
 
-
+		if(heightSecondElement > 0){
+			xT = x-(widthFirstElement);
+			yT = y+heightFirstElement+heightSecondElement;
+		}else if(widthFirstElement > 0){
+			xT = x+widthFirstElement;
+			yT = y+heightFirstElement*2;
+			widthSecondElement = textObject.width;
+			heightSecondElement = textObject.height;
+		} else{
+			xT = x;
+			yT = y;
 		}
+		widthFirstElement = textObject.width;
+		heightFirstElement = textObject.height;
+
+
+		stage.addChild(textObject);
+
+		textObject.x = x;
+		textObject.y = y;
+
+
+		keywords.push({
+			textObject: textObject,
+			x: xT,
+			y: yT,
+			baseX: x,
+			baseY: y,
+			objX: xT+Math.round(Math.random()*defaultDistance-defaultDistance/2),
+			objY: yT+Math.round(Math.random()*defaultDistance-defaultDistance/2),
+			lifespanAnimation: 90,
+			currentTimeAnimation: 0
+
+		});
 	}
 
-
-	
-
-	function hideKeywords(){
-		for(var keywordId in keywords){
-			keywords[keywordId].textObject.destroy();
-		}
-		keywords = [];
-	}
-	function displayKeywords(content, x, y){
-		var widthFirstElement = 0;
-		var heightFirstElement = 0;
-		var widthSecondElement = 0;
-		var heightSecondElement = 0;
-		for(var textId in content){
-			var text = content[textId];
-			var textObject = new PIXI.Text(text.toUpperCase(), {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
-			textObject.pivot = new PIXI.Point(textObject.width/2, textObject.height/2);
-			textObject.resolution = 2;
-			var xT, yT;
-
-			if(heightSecondElement > 0){
-				xT = x-(widthFirstElement);
-				yT = y+heightFirstElement+heightSecondElement;
-			}else if(widthFirstElement > 0){
-				xT = x+widthFirstElement;
-				yT = y+heightFirstElement*2;
-				widthSecondElement = textObject.width;
-				heightSecondElement = textObject.height;
-			} else{
-				xT = x;
-				yT = y;
-			}
-			widthFirstElement = textObject.width;
-			heightFirstElement = textObject.height;
+}
 
 
-			stage.addChild(textObject);
+function closeOverlay(){
+	$("div.overlay").removeClass("visible").css({top: 0, width: 0});
+	$("div.overlay .content").html("");
+}
 
-			textObject.x = x;
-			textObject.y = y;
+function changeOverlayContent(content, x, y, width, height){
 
+	if(x <= 0) x = 0;
+	if(y <= 0) y = 0;
 
-			keywords.push({
-				textObject: textObject,
-				x: xT,
-				y: yT,
-				baseX: x,
-				baseY: y,
-				objX: xT+Math.round(Math.random()*defaultDistance-defaultDistance/2),
-				objY: yT+Math.round(Math.random()*defaultDistance-defaultDistance/2),
-				lifespanAnimation: 90,
-				currentTimeAnimation: 0
+	if(x+width > widthWindow) x = widthWindow-width;
+	if(y+height > heightWindow) y = heightWindow-height;
 
-			});
-		}
+	if(!$("div.overlay").hasClass("visible")){
+		$("div.overlay")
+		.addClass("visible")
+		.css({
+			left: x,
+			top: y,
+			width: width,
+			height: height
+		});
+		$("div.overlay .content").html(content);
+	}else{
+		$("div.overlay").removeClass("visible");
 
-	}
-
-
-	function closeOverlay(){
-		$("div.overlay").removeClass("visible").css({top: 0, width: 0});
-		$("div.overlay .content").html("");
-	}
-
-	function changeOverlayContent(content, x, y, width, height){
-
-		if(!$("div.overlay").hasClass("visible")){
+		setTimeout(function(){
+			$("div.overlay .content").html(content);
 			$("div.overlay")
 			.addClass("visible")
 			.css({
@@ -356,87 +425,73 @@ function init(){
 				width: width,
 				height: height
 			});
-			$("div.overlay .content").html(content);
-		}else{
-			$("div.overlay").removeClass("visible");
+		}, 300);
 
-			setTimeout(function(){
-				$("div.overlay .content").html(content);
-				$("div.overlay")
-				.addClass("visible")
-				.css({
-					left: x,
-					top: y,
-					width: width,
-					height: height
-				});
-			}, 300);
 
+	}
+
+
+}
+
+function rgb(string){
+	return string.match(/\w\w/g).map(function(b){ return parseInt(b,16) })
+}
+
+function blendColor(rgb1, rgb2, index){
+	var rgb1 = rgb(rgb1);
+	var rgb2 = rgb(rgb2);
+	var rgb3 = [];
+	for (var i=0; i<3; i++) rgb3[i] = rgb1[i]+index*(rgb2[i]-rgb1[i])|0;
+		return rgb3.map(function(n){ return n.toString(16) }).map(function(s){ return "00".slice(s.length)+s}).join('');
+}
+
+
+function mouseEventHandler(e){
+	var parentOffset = $("#grid").offset(); 
+
+	var relX = e.pageX - parentOffset.left;
+	var relY = e.pageY - parentOffset.top;
+
+	interactionHandler(relX, relY);
+}
+function interactionHandler(x, y){
+
+	var ratioX = x/widthWindow;
+	var ratioY = y/heightWindow;
+
+	var closestCol = Math.round(cols*ratioX);
+	var closestRow = Math.round(rows*ratioY);
+
+	var delta = 4;
+	var radius = delta;
+
+
+	for (var dx = -(radius); dx <= radius; dx++) {
+		for (var dy = -(radius); dy <= radius; dy++) {
+			if(	closestCol+dx >= 0
+				&& closestCol+dx < cols
+				&& closestRow+dy >= 0
+				&& closestRow+dy < rows
+				){
+
+				var key = (closestCol+dx)+"-"+(closestRow+dy);
+			var distance = Math.max(Math.ceil(Math.sqrt(Math.pow(Math.abs(dx), 2)+Math.pow(Math.abs(dy), 2))), 1);
+
+			if(!affectedDots.hasOwnProperty(key) || distance < affectedDots[key].distance){
+
+				affectedDots[key] = {
+					distance: distance,
+					effet: distance/Math.sqrt(Math.pow(radius, 2)+Math.pow(radius, 2)),
+					x: closestCol+dx,
+					y: closestRow+dy,
+					lifespan: defaultLifespan
+				};
+			}
 
 		}
 
-
-	}
-
-	function rgb(string){
-		return string.match(/\w\w/g).map(function(b){ return parseInt(b,16) })
-	}
-
-	function blendColor(rgb1, rgb2, index){
-		var rgb1 = rgb(rgb1);
-		var rgb2 = rgb(rgb2);
-		var rgb3 = [];
-		for (var i=0; i<3; i++) rgb3[i] = rgb1[i]+index*(rgb2[i]-rgb1[i])|0;
-			return rgb3.map(function(n){ return n.toString(16) }).map(function(s){ return "00".slice(s.length)+s}).join('');
-	}
-
-
-	function mouseEventHandler(e){
-		var parentOffset = $("#grid").offset(); 
-
-		var relX = e.pageX - parentOffset.left;
-		var relY = e.pageY - parentOffset.top;
-
-		interactionHandler(relX, relY);
-	}
-	function interactionHandler(x, y){
-
-		var ratioX = x/widthWindow;
-		var ratioY = y/heightWindow;
-
-		var closestCol = Math.round(cols*ratioX);
-		var closestRow = Math.round(rows*ratioY);
-
-		var delta = 4;
-		var radius = delta;
-
-
-		for (var dx = -(radius); dx <= radius; dx++) {
-			for (var dy = -(radius); dy <= radius; dy++) {
-				if(	closestCol+dx >= 0
-					&& closestCol+dx < cols
-					&& closestRow+dy >= 0
-					&& closestRow+dy < rows
-					){
-
-					var key = (closestCol+dx)+"-"+(closestRow+dy);
-				var distance = Math.max(Math.ceil(Math.sqrt(Math.pow(Math.abs(dx), 2)+Math.pow(Math.abs(dy), 2))), 1);
-
-				if(!affectedDots.hasOwnProperty(key) || distance < affectedDots[key].distance){
-
-					affectedDots[key] = {
-						distance: distance,
-						effet: distance/Math.sqrt(Math.pow(radius, 2)+Math.pow(radius, 2)),
-						x: closestCol+dx,
-						y: closestRow+dy,
-						lifespan: defaultLifespan
-					};
-				}
-
-			}
-
-		};
 	};
+};
 }
 
 
