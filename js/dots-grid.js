@@ -292,10 +292,10 @@ function drawGrid(){
 					xBox = (x + element.overlayX)*(marginDot+radiusDot*2)-element.anchorX;
 					yBox = (y + element.overlayY)*(marginDot+radiusDot*2)-element.anchorY;
 					playAnimation(x, y, element.animation);
-					if(element.type = "html"){
+					if(element.type === "html"){
 						changeOverlayContent(element.src, xBox, yBox, element.w, element.h);
-					}
-					if(element.type = "keywords"){
+					} else if(element.type === "keywords"){
+						closeOverlay();
 						displayKeywords(element.content, xBox, yBox, element.w, element.h);
 					}
 
