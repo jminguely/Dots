@@ -21,6 +21,14 @@ And then include the following code in your site:
 </div>
 ```
 
+## Initialise
+When the dom is ready, launch the function "initializeGrid"
+```sh
+$(document).ready(function(){
+	initializeGrid();
+});
+```
+
 ## JSON
 To add some interactive points to the grid, you need to include a script containing a variable "gridElements" and containing an Array with the specified dots
 

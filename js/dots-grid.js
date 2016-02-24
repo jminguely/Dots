@@ -155,7 +155,8 @@ var animations = [
 
 ];
 
-$(document).ready(function(){
+
+function initializeGrid(){
 	WebFont.load({
 		custom: {
 			families: ["CustomMuseoSansBold"]
@@ -164,13 +165,10 @@ $(document).ready(function(){
 			init();
 		}
 	});
-});
+}
 
 
 function init(){
-
-	
-
 
 	setDimension();
 
