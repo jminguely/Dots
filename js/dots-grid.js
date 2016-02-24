@@ -177,7 +177,7 @@ function init(){
 	renderer = PIXI.autoDetectRenderer(widthWindow, heightWindow, {
 		view: myView,
 		transparent: true, 
-		antialias: true,
+		antialias: false,
 		resolution: aspectRatio
 	});
 
