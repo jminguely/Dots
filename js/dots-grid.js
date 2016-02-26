@@ -236,8 +236,8 @@ function doneResizing()
 function drawGrid(){
 	for (var i = 0; i < cols; i++) {
 		for (var j = 0; j < rows; j++) {
-			var x = i*(marginDot+radiusDot*2);
-			var y = j*(marginDot+radiusDot*2);
+			var x = i*(marginDot+radiusDot*2) + marginDot+radiusDot;
+			var y = j*(marginDot+radiusDot*2) + marginDot+radiusDot;
 
 			graphics.beginFill("0x"+mainColor);
 			graphics.drawCircle(x, y, radiusDot);
@@ -259,8 +259,8 @@ function drawGrid(){
 			for (var i = 1; i >= -1; i--) {
 				for (var j = 1; j >= -1; j--) {
 					if(Math.abs(i)!=Math.abs(j) || (i === 0 && j === 0)){
-						var xPos = (x+i)*(marginDot+radiusDot*2);
-						var yPos = (y+j)*(marginDot+radiusDot*2);
+						var xPos = (x+i)*(marginDot+radiusDot*2) + marginDot+radiusDot;
+						var yPos = (y+j)*(marginDot+radiusDot*2) + marginDot+radiusDot;
 						gridElements[index].graphics.drawCircle(xPos, yPos, radiusDot);
 
 					}
@@ -272,7 +272,7 @@ function drawGrid(){
 			gridElements[index].graphics.buttonMode = true;
 			gridElements[index].graphics.defaultCursor = "pointer";
 			var hitBoxRadius = (radiusDot*2+marginDot)*2;
-			gridElements[index].graphics.hitArea = new PIXI.Rectangle(x*(marginDot+radiusDot*2)-hitBoxRadius, y*(marginDot+radiusDot*2)-hitBoxRadius, hitBoxRadius*2, hitBoxRadius*2);
+			gridElements[index].graphics.hitArea = new PIXI.Rectangle(x*(marginDot+radiusDot*2) + marginDot+radiusDot -hitBoxRadius, y*(marginDot+radiusDot*2) + marginDot+radiusDot -hitBoxRadius, hitBoxRadius*2, hitBoxRadius*2);
 
 
 
@@ -289,8 +289,8 @@ function drawGrid(){
 				} else{
 					hideKeywords();
 					currentElementId = index;
-					xBox = (x + element.overlayX)*(marginDot+radiusDot*2)-element.anchorX;
-					yBox = (y + element.overlayY)*(marginDot+radiusDot*2)-element.anchorY;
+					xBox = (x + element.overlayX)*(marginDot+radiusDot*2) + marginDot+radiusDot-element.anchorX;
+					yBox = (y + element.overlayY)*(marginDot+radiusDot*2) + marginDot+radiusDot-element.anchorY;
 					playAnimation(x, y, element.animation);
 					if(element.type === "html"){
 						changeOverlayContent(element.src, xBox, yBox, element.w, element.h);
@@ -526,8 +526,8 @@ function render(){
 
 			var dot = affectedDots[id];
 
-			var x = dot.x*(marginDot+radiusDot*2);
-			var y = dot.y*(marginDot+radiusDot*2);
+			var x = dot.x*(marginDot+radiusDot*2) + marginDot+radiusDot;
+			var y = dot.y*(marginDot+radiusDot*2) + marginDot+radiusDot;
 
 			var nEffet = (1-dot.effet)/defaultLifespan*affectedDots[id].lifespan;
 
@@ -580,8 +580,8 @@ function render(){
 	 			var step = animationQueue.shift();
 	 			for(dotId in step){
 	 				var dot = step[dotId];
-	 				var x = dot[0]*(marginDot+radiusDot*2);
-	 				var y = dot[1]*(marginDot+radiusDot*2);
+	 				var x = dot[0]*(marginDot+radiusDot*2) + marginDot+radiusDot;
+	 				var y = dot[1]*(marginDot+radiusDot*2) + marginDot+radiusDot;
 	 				animationGraphics.beginFill("0x"+primColor);
 	 				animationGraphics.drawCircle(x, y, radiusDot);
 	 				animationGraphics.endFill();
