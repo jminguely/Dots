@@ -278,10 +278,10 @@ function drawGrid(){
 
 			gridElements[index].graphics.click = gridElements[index].graphics.tap = function(data){	
 				if(currentElementId === index){
-					if(element.type = "html"){
+					if(element.type == "html"){
 						closeOverlay();
 					}
-					if(element.type = "keywords"){
+					if(element.type == "keywords"){
 						hideKeywords();
 					}
 					animationGraphics.clear();
