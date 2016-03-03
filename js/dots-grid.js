@@ -274,8 +274,6 @@ function drawGrid(){
 			var hitBoxRadius = (radiusDot*2+marginDot)*2;
 			gridElements[index].graphics.hitArea = new PIXI.Rectangle(x*(marginDot+radiusDot*2) + marginDot+radiusDot -hitBoxRadius, y*(marginDot+radiusDot*2) + marginDot+radiusDot -hitBoxRadius, hitBoxRadius*2, hitBoxRadius*2);
 
-
-
 			gridElements[index].graphics.click = gridElements[index].graphics.tap = function(data){	
 				if(currentElementId === index){
 					if(element.type == "html"){
@@ -504,7 +502,6 @@ function render(){
 	}else{
 		lowPerf = true;
 	}
-		lowPerf = true;
 	if(!lowPerf){
 		graphics2.clear();
 	}
