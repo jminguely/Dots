@@ -504,11 +504,11 @@ function render(){
 	}else{
 		lowPerf = true;
 	}
-
+	lowPerf = true;
 	if(!lowPerf){
 		graphics2.clear();
-		lines.clear();
 	}
+	lines.clear();
 
 	
 
