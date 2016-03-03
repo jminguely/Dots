@@ -388,7 +388,7 @@ function displayKeywords(content, x, y){
 
 
 function closeOverlay(){
-	$("div.overlay").removeClass("visible").css({top: 0, width: 0});
+	$("div.overlay").removeClass("visible").css({top: 0, width: 0, height: 0, left: 0});
 	$("div.overlay .content").html("");
 }
 
@@ -504,19 +504,12 @@ function render(){
 	}else{
 		lowPerf = true;
 	}
-	lowPerf = true;
+		lowPerf = true;
 	if(!lowPerf){
 		graphics2.clear();
 	}
 	lines.clear();
 
-	
-
-	if(fps > 20){
-		lowPerf = false;
-	}else{
-		lowPerf = true;
-	}
 
 	if(!lowPerf){
 
