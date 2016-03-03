@@ -41,20 +41,19 @@ var animations = [
 [[3, 3]]
 ],
 [
+[[4, -4]],
 [[3, -3]],
 [[2, -2]],
 [[1, -1]],
 [[0, 0]],
 [[-1, 1]],
-[[-2, 2]],
-[[-3, 3]]
+[[-2, 2]]
 ],
 [
 [[0, -2], [0, 2], [2, 0], [-2, 0]],
 [[0, -3], [0, 3], [3, 0], [-3, 0]],
 [[0, -4], [0, 4], [4, 0], [-4, 0]],
-[[0, -5], [0, 5], [5, 0], [-5, 0]],
-[[0, -6], [0, 6], [6, 0], [-6, 0]]
+[[0, -5], [0, 5], [5, 0], [-5, 0]]
 ],
 [
 [[0, -2], [0, 2], [2, 0], [-2, 0]],
@@ -150,7 +149,16 @@ var animations = [
 [[-2, -1], [-1, -2]],
 [[-2, -2], [-2, -2], [-1, -1]],
 [[-2, 0]],
-
+],
+[
+[[-3, 0]],
+[[-2, 0]],
+[[-1, 0]],
+[[-0, 0]],
+[[1, 1]],
+[[2, 2]],
+[[3, 3]],
+[[4, 4]]
 ]
 
 ];
@@ -206,6 +214,7 @@ function resizeStart(){
 	flushStage();
 	graphics.clear();
 	graphics2.clear();
+	destroyLatestNews();
 	animationGraphics.clear();
 	$("div.overlay").removeClass("visible").find(".content").html("");
 	resizeId = setTimeout(doneResizing, 500);
@@ -275,6 +284,7 @@ function drawGrid(){
 			gridElements[index].graphics.hitArea = new PIXI.Rectangle(x*(marginDot+radiusDot*2) + marginDot+radiusDot -hitBoxRadius, y*(marginDot+radiusDot*2) + marginDot+radiusDot -hitBoxRadius, hitBoxRadius*2, hitBoxRadius*2);
 
 			gridElements[index].graphics.click = gridElements[index].graphics.tap = function(data){	
+				destroyLatestNews();
 				if(currentElementId === index){
 					if(element.type == "html"){
 						closeOverlay();
@@ -290,11 +300,16 @@ function drawGrid(){
 					xBox = (x + element.overlayX)*(marginDot+radiusDot*2) + marginDot+radiusDot-element.anchorX;
 					yBox = (y + element.overlayY)*(marginDot+radiusDot*2) + marginDot+radiusDot-element.anchorY;
 					playAnimation(x, y, element.animation);
+					
 					if(element.type === "html"){
 						changeOverlayContent(element.src, xBox, yBox, element.w, element.h);
 					} else if(element.type === "keywords"){
 						closeOverlay();
 						displayKeywords(element.content, xBox, yBox, element.w, element.h);
+					}
+
+					if(element.titleLatestNews === true){
+						drawLatestNews(x, y);
 					}
 
 				}
@@ -307,10 +322,39 @@ function drawGrid(){
 
 }
 
+var latest, news;
 
+function drawLatestNews(x, y){
+	news = new PIXI.Text("NEWS".split("").join(String.fromCharCode(8202)), {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
+	news.pivot = new PIXI.Point(-news.height/2, news.height/2);
+	news.resolution = 2;
+	news.x = (x-6)*(marginDot+radiusDot*2);
+	news.y = (y-6)*(marginDot+radiusDot*2);
+
+	latest = new PIXI.Text("LATEST".split("").join(String.fromCharCode(8202)), {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
+	latest.pivot = new PIXI.Point(0, latest.height/2);
+	latest.rotation = -1.5708;
+	latest.resolution = 2;
+	latest.x = (x-6)*(marginDot+radiusDot*2);
+	latest.y = (y+3)*(marginDot+radiusDot*2);
+
+
+	stage.addChild(latest);
+	stage.addChild(news);
+}
+
+function destroyLatestNews(){
+	if(latest){
+		latest.destroy();
+	}
+	if(news){
+		news.destroy();
+	}
+}
 
 function playAnimation(x, y, animationId){
 	animationGraphics.clear();
+
 	var animation = animations[animationId];
 
 	for (var stepId in animation) {
@@ -320,8 +364,6 @@ function playAnimation(x, y, animationId){
 			newStep.push([x+step[dotId][0], y+step[dotId][1]]);
 		}
 		animationQueue.push(newStep);
-
-
 	}
 }
 
@@ -341,17 +383,17 @@ function displayKeywords(content, x, y){
 	var heightSecondElement = 0;
 	for(var textId in content){
 		var text = content[textId];
-		var textObject = new PIXI.Text(text.toUpperCase(), {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
+		var textObject = new PIXI.Text(text.toUpperCase().split("").join(String.fromCharCode(8202)), {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
 		textObject.pivot = new PIXI.Point(textObject.width/2, textObject.height/2);
 		textObject.resolution = 2;
 		var xT, yT;
 
 		if(heightSecondElement > 0){
-			xT = x-(widthFirstElement);
-			yT = y+heightFirstElement+heightSecondElement;
+			xT = x-(widthFirstElement/2);
+			yT = y+heightFirstElement*3;
 		}else if(widthFirstElement > 0){
-			xT = x+widthFirstElement;
-			yT = y+heightFirstElement*2;
+			xT = x+widthFirstElement/3;
+			yT = y+heightFirstElement*1.5;
 			widthSecondElement = textObject.width;
 			heightSecondElement = textObject.height;
 		} else{
@@ -502,6 +544,7 @@ function render(){
 	}else{
 		lowPerf = true;
 	}
+
 	if(!lowPerf){
 		graphics2.clear();
 	}
@@ -556,9 +599,31 @@ function render(){
 		if(parseInt(idKeyword) === keywords.length-1){
 			idNexLine = 0;
 		}
+
+		var beginX = keywords[idKeyword].textObject.x,
+			beginY = keywords[idKeyword].textObject.y,
+			endX = keywords[idNexLine].textObject.x,
+			endY = keywords[idNexLine].textObject.y;
+
+		if(parseInt(idKeyword) === 0){
+			beginX = beginX + keywords[idKeyword].textObject.width*0.15;
+			endX = (endX - keywords[idNexLine].textObject.width*0.25);
+		}
+
+		if(parseInt(idKeyword) === 1){
+			beginX = beginX - keywords[idKeyword].textObject.width*0.25;
+			endX = endX + keywords[idNexLine].textObject.width*0.1;
+		}
+
+		if(parseInt(idKeyword) === 2){
+			beginX = beginX+keywords[idKeyword].textObject.width*0.1;
+			endX = endX - keywords[idNexLine].textObject.width*0.4;
+		}
+		// beginX = 0;
+
 		lines.lineStyle(2, "0x"+primColor, 1);
-		lines.moveTo(keywords[idKeyword].textObject.x, keywords[idKeyword].textObject.y);
-	 	lines.lineTo(keywords[idNexLine].textObject.x, keywords[idNexLine].textObject.y);//draw min Y line
+		lines.moveTo(beginX, beginY);
+	 	lines.lineTo(endX, endY);
 	 }
 
 

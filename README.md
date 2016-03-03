@@ -64,8 +64,12 @@ Type of animation to be displayed on the grid when the tooltip opens
 8: Inversed "L"
 9: Arrow
 10: Inversed Arrow
-11: Carré
+11: Square
+12: Mirror Symtry from "L"
 ```
+
+#### titleLatestNews
+Display the title Latest News (near the square animation)
 
 #### type
 Type of the content to be displayed on click
