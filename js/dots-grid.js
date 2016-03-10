@@ -235,6 +235,7 @@ function setDimension(){
 }
 function doneResizing()
 {
+	startScriptTime = new Date().getTime();
 	setDimension();
 	renderer.resize(widthWindow, heightWindow);
 	cols = Math.ceil(widthWindow/(marginDot+radiusDot*2));
@@ -331,12 +332,12 @@ function drawLatestNews(x, y){
 	news.x = (x-6)*(marginDot+radiusDot*2);
 	news.y = (y-6)*(marginDot+radiusDot*2);
 
-	latest = new PIXI.Text("LATEST".split("").join(String.fromCharCode(8202)), {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
+	latest = new PIXI.Text("DERNIERES", {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
 	latest.pivot = new PIXI.Point(0, latest.height/2);
 	latest.rotation = -1.5708;
 	latest.resolution = 2;
 	latest.x = (x-6)*(marginDot+radiusDot*2);
-	latest.y = (y+3)*(marginDot+radiusDot*2);
+	latest.y = (y+3)*(marginDot+radiusDot*2)+2;
 
 
 	stage.addChild(latest);
@@ -532,7 +533,7 @@ function interactionHandler(x, y){
 };
 }
 
-
+var startScriptTime;
 
 function render(){
 	var now = new Date().getTime();
@@ -648,8 +649,31 @@ function render(){
 
 	 }
 
-	 renderer.render(stage);
-	 requestAnimationFrame(render);
+	 var step = 50;
+	 var maxGlowAnim = 250;
+	 var fpsGlow = (now-startScriptTime)/animationSpeed+50;
+	 var currentStep = Math.floor(fpsGlow/step);
+
+
+	 if(currentStep < 4){
+	 	var alphaAnim = Math.abs(1-(fpsGlow%(currentStep*step))/25);
+	 	gridElements.forEach(function(element) {
+			if(element.graphics){
+				element.graphics.alpha = alphaAnim;
+			}
+		});
+
+	 }else{
+	 	gridElements.forEach(function(element) {
+			if(element.graphics){
+				element.graphics.alpha = 1;
+			}
+		});
+	 }
+
+
+	renderer.render(stage);
+	requestAnimationFrame(render);
 
 	}
 
