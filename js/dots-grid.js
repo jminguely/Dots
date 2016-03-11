@@ -163,8 +163,10 @@ var animations = [
 
 ];
 
+var textLatestNews = "DERNIERES";
 
-function initializeGrid(){
+function initializeGrid(options){
+	textLatestNews = options.textLatestNews;
 	WebFont.load({
 		custom: {
 			families: ["CustomMuseoSansBold"]
@@ -331,8 +333,8 @@ function drawLatestNews(x, y){
 	news.resolution = 2;
 	news.x = (x-6)*(marginDot+radiusDot*2);
 	news.y = (y-6)*(marginDot+radiusDot*2);
-
-	latest = new PIXI.Text("DERNIERES", {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
+	console.log(textLatestNews);
+	latest = new PIXI.Text(textLatestNews.toString(), {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
 	latest.pivot = new PIXI.Point(0, latest.height/2);
 	latest.rotation = -1.5708;
 	latest.resolution = 2;
@@ -534,6 +536,7 @@ function interactionHandler(x, y){
 }
 
 var startScriptTime;
+var currentGlowing = 0;
 
 function render(){
 	var now = new Date().getTime();
@@ -655,20 +658,17 @@ function render(){
 	 var currentStep = Math.floor(fpsGlow/step);
 
 
-	 if(currentStep < 4){
-	 	var alphaAnim = Math.abs(1-(fpsGlow%(currentStep*step))/25);
-	 	gridElements.forEach(function(element) {
-			if(element.graphics){
-				element.graphics.alpha = alphaAnim;
-			}
-		});
+	 if(currentStep < 10){
+	 	var state = Math.ceil((fpsGlow%(currentStep*step))*2);
+	 	var alphaAnim = Math.abs(1-state/50);
+	 	
+	 	if(gridElements[currentGlowing].graphics){
+	 		gridElements[currentGlowing].graphics.alpha = alphaAnim;
+	 	}
+	 	if(alphaAnim === 1){
+	 		currentGlowing = Math.floor(Math.random()*(gridElements.length))
+	 	}
 
-	 }else{
-	 	gridElements.forEach(function(element) {
-			if(element.graphics){
-				element.graphics.alpha = 1;
-			}
-		});
 	 }
 
 
