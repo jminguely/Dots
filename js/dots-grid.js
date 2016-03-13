@@ -308,7 +308,7 @@ function drawGrid(){
 						changeOverlayContent(element.src, xBox, yBox, element.w, element.h);
 					} else if(element.type === "keywords"){
 						closeOverlay();
-						displayKeywords(element.content, xBox, yBox, element.w, element.h);
+						displayKeywords(element.content, xBox, yBox, element.urlLink);
 					}
 
 					if(element.titleLatestNews === true){
@@ -379,7 +379,8 @@ function hideKeywords(){
 	}
 	keywords = [];
 }
-function displayKeywords(content, x, y){
+function displayKeywords(content, x, y, urlLink){
+	
 	var widthFirstElement = 0;
 	var heightFirstElement = 0;
 	var widthSecondElement = 0;
@@ -389,6 +390,12 @@ function displayKeywords(content, x, y){
 		var textObject = new PIXI.Text(text.toUpperCase().split("").join(String.fromCharCode(8202)), {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
 		textObject.pivot = new PIXI.Point(textObject.width/2, textObject.height/2);
 		textObject.resolution = 2;
+		textObject.interactive = true;
+		textObject.buttonMode = true;
+		textObject.defaultCursor = "pointer";
+		textObject.click = textObject.tap = function(data){	
+			document.location.href = urlLink;
+		}
 		var xT, yT;
 
 		if(heightSecondElement > 0){
@@ -664,7 +671,6 @@ function render(){
 				element.graphics.alpha = alphaAnim;
 			}
 		});
-
 	 }
 
 

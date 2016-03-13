@@ -78,6 +78,9 @@ keywords: floating keywords
 html: embed html
 ```
 
+#### urlLink
+For keyword type. Url of the link when the keywords are clicked
+
 #### src
 Html code to be placed in the tooltip (for an HTML type of element)
 
