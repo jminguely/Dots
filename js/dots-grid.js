@@ -390,12 +390,16 @@ function displayKeywords(content, x, y, urlLink){
 		var textObject = new PIXI.Text(text.toUpperCase().split("").join(String.fromCharCode(8202)), {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
 		textObject.pivot = new PIXI.Point(textObject.width/2, textObject.height/2);
 		textObject.resolution = 2;
-		textObject.interactive = true;
-		textObject.buttonMode = true;
-		textObject.defaultCursor = "pointer";
-		textObject.click = textObject.tap = function(data){	
-			document.location.href = urlLink;
+		
+		if(urlLink != "" && urlLink != undefined){
+			textObject.interactive = true;
+			textObject.buttonMode = true;
+			textObject.defaultCursor = "pointer";
+			textObject.click = textObject.tap = function(data){	
+				document.location.href = urlLink;
+			}
 		}
+		
 		var xT, yT;
 
 		if(heightSecondElement > 0){
