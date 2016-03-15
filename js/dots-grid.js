@@ -166,6 +166,7 @@ var animations = [
 var textLatestNews = "DERNIERES";
 
 function initializeGrid(options){
+
 	textLatestNews = options.textLatestNews;
 	WebFont.load({
 		custom: {
@@ -195,6 +196,7 @@ function init(){
 
 	renderer.render(stage);
 
+	renderer.plugins.interaction.autoPreventDefault = false;
 	graphics = new PIXI.Graphics();
 	graphics2 = new PIXI.Graphics();
 	lines = new PIXI.Graphics();
