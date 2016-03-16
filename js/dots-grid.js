@@ -377,12 +377,17 @@ function playAnimation(x, y, animationId){
 
 function hideKeywords(){
 	for(var keywordId in keywords){
+		keywords[keywordId].textObject.interactive = false;
+		keywords[keywordId].textObject.buttonMode = false;
+		keywords[keywordId].textObject.textObjectclick = keywords[keywordId].textObject.tap = false;
+
 		keywords[keywordId].textObject.destroy();
 	}
 	keywords = [];
+	console.log(keywords);
 }
 function displayKeywords(content, x, y, urlLink){
-	
+
 	var widthFirstElement = 0;
 	var heightFirstElement = 0;
 	var widthSecondElement = 0;
