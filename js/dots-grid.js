@@ -30,6 +30,9 @@ var affectedDots = [];
 var defaultLifespan = 20;
 var lastCoord = [];
 
+var userInteracted = false;
+var delayShowRandom = 5000;
+
 var animations = [
 [
 [[-3, -3]],
@@ -178,12 +181,27 @@ function initializeGrid(options){
 	});
 }
 
+function launchRandomPoint(){
+	setTimeout(function(){ 
+		if(!userInteracted){
+			var randElementI = Math.floor(Math.random()*gridElements.length);
+			if(gridElements[randElementI] && gridElements[randElementI].graphics){
+				gridElements[randElementI].graphics.click();
+			}
+			launchRandomPoint();
+		}
+	}, delayShowRandom);
+}
+
 
 function init(){
 
 	setDimension();
 
 	myView = document.getElementById('grid');
+
+	myView.addEventListener('click', interactionUser, false);
+	myView.addEventListener('touchend', interactionUser, false);
 
 	renderer = PIXI.autoDetectRenderer(widthWindow, heightWindow, {
 		view: myView,
@@ -210,6 +228,15 @@ function init(){
 
 	doneResizing();
 	render();
+
+
+
+
+	launchRandomPoint();
+}
+
+function interactionUser(){
+	userInteracted = true;
 }
 
 window.onresize = resizeStart;
@@ -327,6 +354,7 @@ function drawGrid(){
 
 }
 
+
 var latest, news;
 
 function drawLatestNews(x, y){
@@ -335,7 +363,6 @@ function drawLatestNews(x, y){
 	news.resolution = 2;
 	news.x = (x-6)*(marginDot+radiusDot*2);
 	news.y = (y-6)*(marginDot+radiusDot*2);
-	console.log(textLatestNews);
 	latest = new PIXI.Text(textLatestNews.toString(), {font:"20px CustomMuseoSansBold", fill:"#"+secondColor, stroke: "#FFFFFF", strokeThickness: 3});
 	latest.pivot = new PIXI.Point(0, latest.height/2);
 	latest.rotation = -1.5708;
@@ -384,7 +411,6 @@ function hideKeywords(){
 		keywords[keywordId].textObject.destroy();
 	}
 	keywords = [];
-	console.log(keywords);
 }
 function displayKeywords(content, x, y, urlLink){
 
