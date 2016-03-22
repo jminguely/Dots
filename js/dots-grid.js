@@ -181,13 +181,21 @@ function initializeGrid(options){
 	});
 }
 
+var lastRandomNumber;
+
 function launchRandomPoint(){
+	var randElementI;
+	randElementI = Math.floor(Math.random()*gridElements.length);
+	while(lastRandomNumber === randElementI){
+		randElementI = Math.floor(Math.random()*gridElements.length);
+	}
+	lastRandomNumber = randElementI;
+
+	if(gridElements[randElementI] && gridElements[randElementI].graphics){
+		gridElements[randElementI].graphics.click();
+	}
 	setTimeout(function(){ 
 		if(!userInteracted){
-			var randElementI = Math.floor(Math.random()*gridElements.length);
-			if(gridElements[randElementI] && gridElements[randElementI].graphics){
-				gridElements[randElementI].graphics.click();
-			}
 			launchRandomPoint();
 		}
 	}, delayShowRandom);
@@ -648,9 +656,9 @@ function render(){
 		}
 
 		var beginX = keywords[idKeyword].textObject.x,
-			beginY = keywords[idKeyword].textObject.y,
-			endX = keywords[idNexLine].textObject.x,
-			endY = keywords[idNexLine].textObject.y;
+		beginY = keywords[idKeyword].textObject.y,
+		endX = keywords[idNexLine].textObject.x,
+		endY = keywords[idNexLine].textObject.y;
 
 		if(parseInt(idKeyword) === 0){
 			beginX = beginX + keywords[idKeyword].textObject.width*0.15;
@@ -670,55 +678,40 @@ function render(){
 
 		lines.lineStyle(2, "0x"+primColor, 1);
 		lines.moveTo(beginX, beginY);
-	 	lines.lineTo(endX, endY);
-	 }
+		lines.lineTo(endX, endY);
+	}
 
 
-	 lastTickTime = now;
-	 if(!lowPerf){
-	 	if((lastTickTime-lastAnimationTime) > animationSpeed || lastAnimationTime === undefined){
+	lastTickTime = now;
+	if(!lowPerf){
+		if((lastTickTime-lastAnimationTime) > animationSpeed || lastAnimationTime === undefined){
 
-	 		if(animationQueue[0] !== undefined){
-	 			var step = animationQueue.shift();
-	 			for(dotId in step){
-	 				var dot = step[dotId];
-	 				var x = dot[0]*(marginDot+radiusDot*2) + marginDot+radiusDot;
-	 				var y = dot[1]*(marginDot+radiusDot*2) + marginDot+radiusDot;
-	 				animationGraphics.beginFill("0x"+primColor);
-	 				animationGraphics.drawCircle(x, y, radiusDot);
-	 				animationGraphics.endFill();
-	 			}
-	 		}
-	 		lastAnimationTime = lastTickTime;
-
-	 	}
-
-	 }
-
-	 var step = 50;
-	 var maxGlowAnim = 250;
-	 var fpsGlow = (now-startScriptTime)/animationSpeed+50;
-	 var currentStep = Math.floor(fpsGlow/step);
-
-
-	 if(currentStep < 4){
-	 	var alphaAnim = Math.abs(1-(fpsGlow%(currentStep*step))/25);
-	 	gridElements.forEach(function(element) {
-			if(element.graphics){
-				element.graphics.alpha = alphaAnim;
+			if(animationQueue[0] !== undefined){
+				var step = animationQueue.shift();
+				for(dotId in step){
+					var dot = step[dotId];
+					var x = dot[0]*(marginDot+radiusDot*2) + marginDot+radiusDot;
+					var y = dot[1]*(marginDot+radiusDot*2) + marginDot+radiusDot;
+					animationGraphics.beginFill("0x"+primColor);
+					animationGraphics.drawCircle(x, y, radiusDot);
+					animationGraphics.endFill();
+				}
 			}
-		});
-	 }
+			lastAnimationTime = lastTickTime;
+
+		}
+
+	}
 
 
 	renderer.render(stage);
 	requestAnimationFrame(render);
 
-	}
+}
 
 
 
-	function easeInOut(t, b, c, d) {
-		if ((t/=d/2) < 1) return c/2*t*t + b;
-		return -c/2 * ((--t)*(t-2) - 1) + b;
-	}
+function easeInOut(t, b, c, d) {
+	if ((t/=d/2) < 1) return c/2*t*t + b;
+	return -c/2 * ((--t)*(t-2) - 1) + b;
+}
