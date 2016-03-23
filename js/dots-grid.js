@@ -31,7 +31,7 @@ var defaultLifespan = 20;
 var lastCoord = [];
 
 var userInteracted = false;
-var delayShowRandom = 5000;
+var delayShowRandom = 3000;
 
 var animations = [
 [
