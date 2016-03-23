@@ -184,21 +184,26 @@ function initializeGrid(options){
 var lastRandomNumber;
 
 function launchRandomPoint(){
-	var randElementI;
-	randElementI = Math.floor(Math.random()*gridElements.length);
-	while(lastRandomNumber === randElementI){
-		randElementI = Math.floor(Math.random()*gridElements.length);
-	}
-	lastRandomNumber = randElementI;
+	if(gridElements.length > 1){
 
-	if(gridElements[randElementI] && gridElements[randElementI].graphics){
-		gridElements[randElementI].graphics.click();
-	}
-	setTimeout(function(){ 
-		if(!userInteracted){
-			launchRandomPoint();
+		var randElementI;
+		randElementI = Math.floor(Math.random()*gridElements.length);
+			while(lastRandomNumber === randElementI){
+				randElementI = Math.floor(Math.random()*gridElements.length);
+			}
+		
+		
+		lastRandomNumber = randElementI;
+
+		if(gridElements[randElementI] && gridElements[randElementI].graphics){
+			gridElements[randElementI].graphics.click();
 		}
-	}, delayShowRandom);
+		setTimeout(function(){ 
+			if(!userInteracted){
+				launchRandomPoint();
+			}
+		}, delayShowRandom);
+	}
 }
 
 
